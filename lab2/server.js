@@ -2,6 +2,8 @@ const env = require("dotenv");
 const express = require("express");
 const mongoose = require("mongoose");
 const postsRoute = require("./routes/postsRoute");
+const morgan = require("morgan");
+const cors = require("cors");
 
 //Init env
 env.config();
@@ -9,9 +11,14 @@ env.config();
 // Init express
 const app = express();
 
+//Morgan
+app.use(morgan("combined"));
+
+//Allow all cors
+app.use(cors());
+
 // Body parser
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 // Posts Router
 app.use(postsRoute);
