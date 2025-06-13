@@ -11,6 +11,7 @@ const app = express();
 
 // Body parser
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Posts Router
 app.use(postsRoute);

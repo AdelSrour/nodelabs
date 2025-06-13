@@ -22,7 +22,7 @@ postsRoute.get("/api/posts/:id", getPostByID);
 postsRoute.patch("/api/posts/:id", updatePostByID);
 
 // Delete post by id
-postsRoute.patch("/api/posts/:id", deletePostByID);
+postsRoute.delete("/api/posts/:id", deletePostByID);
 
 // Export route
 module.exports = postsRoute;
