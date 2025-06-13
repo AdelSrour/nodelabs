@@ -5,16 +5,16 @@ const postsRoute = require("./routes/postsRoute");
 const morgan = require("morgan");
 const cors = require("cors");
 
-//Init env
+// Init env
 env.config();
 
 // Init express
 const app = express();
 
-//Morgan
+// Morgan
 app.use(morgan("combined"));
 
-//Allow all cors
+// Allow all cors
 app.use(cors());
 
 // Body parser
