@@ -7,11 +7,18 @@ const {
   deletePostByID,
 } = require("../controllers/postsController");
 const { authenticate } = require("../middlewares/auth");
+const JoiValidator = require("../middlewares/JoiValidator");
+const postsSchema = require("../util/schemes/postsSchema");
 
 const postsRoute = Router();
 
 // Create new post
-postsRoute.post("/api/posts", authenticate, createPost);
+postsRoute.post(
+  "/api/posts",
+  authenticate,
+  JoiValidator(postsSchema),
+  createPost
+);
 
 // Get all posts
 postsRoute.get("/api/posts", authenticate, getPosts);
