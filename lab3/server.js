@@ -46,8 +46,16 @@ app.use(errorsHandler);
 // Listen and Init DB
 app.listen(process.env.APP_PORT, () => {
   mongoose
-    .connect(`${process.env.DB_HOSTNAME}/${process.env.DB_NAME}`)
+    .connect(
+      "mongodb+srv://admin:adel@cluster0.pbvrjoo.mongodb.net/facetook?retryWrites=true&w=majority"
+    )
     .then(() => {
       console.log("DB Connected successfully");
     });
+
+  // mongoose
+  //   .connect(`${process.env.DB_HOSTNAME}/${process.env.DB_NAME}`)
+  //   .then(() => {
+  //     console.log("DB Connected successfully");
+  //   });
 });
