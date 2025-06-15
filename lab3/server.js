@@ -8,12 +8,16 @@ const usersRoute = require("./routes/usersRoute");
 const errorsHandler = require("./middlewares/errorsHandler");
 const rateLimiter = require("./middlewares/rateLimiter");
 const helmet = require("helmet");
+const hpp = require("hpp");
 
 // Init env
 env.config();
 
 // Init express
 const app = express();
+
+// hpp
+app.use(hpp());
 
 // Rate limiter
 app.use(rateLimiter);
