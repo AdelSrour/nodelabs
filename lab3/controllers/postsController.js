@@ -13,10 +13,13 @@ const createPost = async (req, res) => {
       .json({ status: false, message: "Please enter title and description" });
   }
 
+  const title = sanitizeInput(body.title);
+  const description = sanitizeInput(body.description);
+
   // Insert data into db
   await Posts.insertOne({
-    title: body.title,
-    description: body.description,
+    title,
+    description,
   });
 
   return res.status(201).json({
@@ -102,6 +105,24 @@ const deletePostByID = async (req, res) => {
     message: "Post deleted successfully",
   });
 };
+
+function sanitizeInput(str) {
+  if (typeof str !== "string") return str;
+
+  // Remove MongoDB operators and suspicious keys
+  str = str.replace(/\$|\./g, "");
+
+  // Remove HTML tags and JS events
+  str = str.replace(/<.*?>/g, ""); // Remove tags like <script>, <img>, etc.
+
+  // Remove script-related strings or JS functions
+  str = str.replace(
+    /(on\w+)=|javascript:|eval\(|alert\(|<script.*?>.*?<\/script>/gi,
+    ""
+  );
+
+  return str;
+}
 
 // Export our functions
 module.exports = {
