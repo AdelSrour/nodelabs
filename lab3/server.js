@@ -8,6 +8,7 @@ const usersRoute = require("./routes/usersRoute");
 const errorsHandler = require("./middlewares/errorsHandler");
 const rateLimiter = require("./middlewares/rateLimiter");
 const helmet = require("helmet");
+const mongoSanitize = require("express-mongo-sanitize");
 
 // Init env
 env.config();
@@ -20,6 +21,9 @@ app.use(rateLimiter);
 
 // helmet
 app.use(helmet());
+
+// Mongo Sanitizer
+app.use(mongoSanitize());
 
 // Morgan
 app.use(morgan("combined"));
