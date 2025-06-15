@@ -20,6 +20,7 @@ const createPost = async (req, res) => {
   await Posts.insertOne({
     title,
     description,
+    createdBy: req.username,
   });
 
   return res.status(201).json({
@@ -31,12 +32,22 @@ const createPost = async (req, res) => {
 // Get all posts
 const getPosts = async (req, res) => {
   // Get all posts
-  const posts = await Posts.find({}, { title: 1, description: 1 });
+  const posts = await Posts.find(
+    {},
+    { title: 1, description: 1, createdBy: 1 }
+  );
+
+  // Flag posts created by current user
+  const flaggedPosts = posts.map((post) => {
+    const postObj = post.toObject();
+    postObj.isOwner = post.createdBy === req.username;
+    return postObj;
+  });
 
   return res.status(200).json({
     status: true,
     message: "Posts fetch was successfully",
-    data: posts,
+    data: flaggedPosts,
   });
 };
 
@@ -70,21 +81,28 @@ const updatePostByID = async (req, res) => {
     return res.status(400).json({ status: false, message: "ID is not valid" });
   }
 
-  // Update db
+  // Update post only if it was created by same user
   await Posts.updateOne(
-    { _id: postID },
+    { _id: postID, createdBy: req.username }, // Add condition here
     {
       $set: {
         title: body.title,
         description: body.description,
       },
     }
-  );
-
-  return res.status(202).json({
-    status: true,
-    message: "Post updated successfully",
-  });
+  )
+    .then((edited) => {
+      if (edited) {
+        return res.status(202).json({
+          status: true,
+          message: "Post updated successfully",
+        });
+      }
+      throw new AppError("You are not allowed to update this post");
+    })
+    .catch((err) => {
+      throw Error(err);
+    });
 };
 
 // Delete a post
@@ -97,13 +115,20 @@ const deletePostByID = async (req, res) => {
     return res.status(400).json({ status: false, message: "ID is not valid" });
   }
 
-  // Delete from db
-  await Posts.findByIdAndDelete(postID);
-
-  return res.status(202).json({
-    status: true,
-    message: "Post deleted successfully",
-  });
+  // Delete from db if its created by the same user
+  await Posts.findOneAndDelete({ _id: postID, createdBy: req.username })
+    .then((deletedPost) => {
+      if (deletedPost) {
+        return res.status(202).json({
+          status: true,
+          message: "Post deleted successfully",
+        });
+      }
+      throw new AppError("You are not allowed to delete this post");
+    })
+    .catch((err) => {
+      throw Error(err);
+    });
 };
 
 function sanitizeInput(str) {
