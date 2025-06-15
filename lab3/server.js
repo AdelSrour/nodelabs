@@ -7,6 +7,7 @@ const cors = require("cors");
 const usersRoute = require("./routes/usersRoute");
 const errorsHandler = require("./middlewares/errorsHandler");
 const rateLimiter = require("./middlewares/rateLimiter");
+const helmet = require("helmet");
 
 // Init env
 env.config();
@@ -16,6 +17,9 @@ const app = express();
 
 // Rate limiter
 app.use(rateLimiter);
+
+// helmet
+app.use(helmet());
 
 // Morgan
 app.use(morgan("combined"));
