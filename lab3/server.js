@@ -6,12 +6,16 @@ const morgan = require("morgan");
 const cors = require("cors");
 const usersRoute = require("./routes/usersRoute");
 const errorsHandler = require("./middlewares/errorsHandler");
+const rateLimiter = require("./middlewares/rateLimiter");
 
 // Init env
 env.config();
 
 // Init express
 const app = express();
+
+// Rate limiter
+app.use(rateLimiter);
 
 // Morgan
 app.use(morgan("combined"));
