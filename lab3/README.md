@@ -1,8 +1,8 @@
 ## Live Demo
 
-Login: https://respected-complex-bread.glitch.me/users/login
+Login (POST) [username, password]: https://respected-complex-bread.glitch.me/users/login
 
-Register: https://respected-complex-bread.glitch.me/users/signup
+Register (POST) [username, password, rePassword, email]: https://respected-complex-bread.glitch.me/users/signup
 
 GetAllPosts (GET) (Require Token): https://respected-complex-bread.glitch.me/api/posts
 
